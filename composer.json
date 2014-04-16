@@ -1,0 +1,20 @@
+{
+    "name": "paveq/magento-svea",
+    "type": "magento-module",
+    "description": "Svea_WebPay",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Paavo Pokkinen",
+            "email": "paavo.pokkinen@vaimo.com"
+        }
+    ],
+    "require": {
+        "vaimo/magento": "*",
+        "magento-hackathon/magento-composer-installer": "*" 
+        
+    },
+    "extra": {
+        "vaimo-module-category": "Payment"
+    }
+}
