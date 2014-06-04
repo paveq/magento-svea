@@ -16,7 +16,7 @@ $_campaignString = $this->getCampaignString($this->getCheapestCampaign());
         
         <?php if(!empty($_campaignString)): ?>
         <p>
-            <img src="<?php echo Mage::getBaseUrl("media"); ?>svea/<?php echo $_lang?>/svea_paymentplan.png">
+            <img src="<?php echo $this->getSkinUrl('images/svea/' . $_lang . '/svea_paymentplan.png') ?>">
         </p>
         <?php endif;?>
     <?php else: ?>

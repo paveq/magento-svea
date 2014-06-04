@@ -2,7 +2,7 @@
 <h1 style="font-style: 25px; margin: 20px 0; text-align: center">
     <?php echo Mage::helper('svea_webpay')->__('redirect'); ?>
 </h1>
-<p style="text-align: center;"><img src="<?php echo Mage::getBaseUrl("media"); ?>/svea/loader.gif"></p>
+<p style="text-align: center;"><img src="<?php echo $this->getSkinUrl('images/svea/loader.gif') ?>"></p>
 
 <?php $inputFields = $this->getFormHtml(); ?>
 <?php echo $inputFields['form_start_tag'] .

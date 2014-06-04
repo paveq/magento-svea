@@ -228,7 +228,7 @@ $_lang = strtoupper(Mage::helper('svea_webpay')->__('lang_code'));
     window.sveaGetAddress = function (e) {
         // Set vars
         var ssn = $("payment_form_<?php echo $_code ?>_ssn").value;
-        var loader = "<img src='<?php echo Mage::getBaseUrl("media", true); ?>svea/loader.gif' id='sveaLoader'>";
+        var loader = "<img src='<?php echo $this->getSkinUrl('images/svea/loader.gif') ?>' id='sveaLoader'>";
         var type = $$('input:checked[type=radio][name*=payment[svea_invoice_customerType]]')[0].value;
 
         // Show Loader

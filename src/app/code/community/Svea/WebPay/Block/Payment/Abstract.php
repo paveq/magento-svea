@@ -9,7 +9,7 @@ abstract class Svea_WebPay_Block_Payment_Abstract extends Mage_Payment_Block_For
     {
         if (!empty($this->_logoCode)) {
             $lang = strtoupper(Mage::helper('svea_webpay')->__('lang_code'));
-            $titleImg = Mage::getBaseUrl('media') . 'svea/' . $lang . '/' . $this->_logoCode . '.png';
+            $titleImg = $this->getSkinUrl('images/svea/' . $lang . '/' . $this->_logoCode . '.png');
             $this->setMethodLabelAfterHtml('<img class="svea-method-logo" src="' . $titleImg . '">');
         }
 
