@@ -60,17 +60,42 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
             // address that the customer has entered, and possibly also the
             // shipping address
             $quote = $order->getQuote();
+            if (empty($quote)) {
+                // This is a magento 1.4 thing, the order has the quote_id
+                $quote = Mage::getModel('sales/quote')
+                    ->load($order->getQuoteId());
+            }
+            if (empty($quote)) {
+                Mage::throwException('Could not load the quote associated with the order');
+            }
+            $address = null;
             $additionalData = unserialize($quote->getPayment()->getAdditionalData());
             if (empty($additionalData) || empty($additionalData['getaddresses_response'])) {
-                throw new Mage_Payment_Exception("Can't fetch address information for order. Please contact support.");
-            }
+                // The getAddress button might not have been clicked, issue a
+                // new getAddress call and use the first address if only one is
+                // returned
+                $conf = Mage::getStoreConfig('payment/' . $this->getCode());
+                $conf['company'] = $_POST['payment'][$this->getCode() . '_customerType'] == 1;
 
-            $addressData = $additionalData['getaddresses_response'];
-            $address = null;
-            foreach ($addressData->customerIdentity as $identity) {
-                if ($identity->addressSelector == $sveaInformation['svea_addressSelector']) {
-                    $address = $identity;
-                    break;
+                $result = Mage::helper('svea_webpay')->getAddresses(
+                    $sveaInformation['svea_ssn'],
+                    $order->getBillingAddress()->getCountryId(),
+                    $conf);
+
+                if (!isset($result->customerIdentity)) {
+                    throw new Mage_Payment_Exception("Can't fetch address information for order. Please contact support.");
+                }
+
+                if (count($result->customerIdentity) == 1) {
+                    $address = $result->customerIdentity[0];
+                }
+            } else {
+                $addressData = $additionalData['getaddresses_response'];
+                foreach ($addressData->customerIdentity as $identity) {
+                    if ($identity->addressSelector == $sveaInformation['svea_addressSelector']) {
+                        $address = $identity;
+                        break;
+                    }
                 }
             }
 
@@ -80,9 +105,12 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
 
             // Set the order addresses to the civil registry information
             foreach ($order->getAddressesCollection() as $orderAddress) {
-                $orderAddress->setFirstname($address->firstName)
-                    ->setLastname($address->lastName . ' ' . $address->coAddress)
-                    ->setCity($address->locality)
+                if ($sveaInformation['svea_customerType'] == 0) {
+                    // Don't overwrite the name if a company
+                    $orderAddress->setFirstname($address->firstName)
+                        ->setLastname($address->lastName . ' ' . $address->coAddress);
+                }
+                $orderAddress->setCity($address->locality)
                     ->setPostcode($address->zipCode)
                     ->setStreet($address->street);
             }
@@ -112,7 +140,14 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
         //Seperates the street from the housenumber according to testcases
         $pattern = "/^(?:\s)*([0-9]*[A-ZÄÅÆÖØÜßäåæöøüa-z]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]+)(?:\s*)([0-9]*\s*[A-ZÄÅÆÖØÜßäåæöøüa-z]*[^\s])?(?:\s)*$/";
         preg_match($pattern, $address, $addressArray);
-        if( !array_key_exists( 2, $addressArray ) ) { $addressArray[2] = ""; } //fix for addresses w/o housenumber
+        if (!array_key_exists(2, $addressArray)) {
+            // Fix for addresses without house number
+            $addressArray[2] = "";
+        }
+        if (empty($addressArray)) {
+            // Fallback if all fails (which it does)
+            $addressArray = array(null, $address);
+        }
 
         if ($company == "1") {
             $item = Item::companyCustomer();
