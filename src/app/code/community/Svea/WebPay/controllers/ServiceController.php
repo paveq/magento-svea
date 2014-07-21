@@ -23,8 +23,13 @@ class Svea_WebPay_ServiceController extends Mage_Core_Controller_Front_Action
                     ->getCountry();
         }
 
+        $method = $this->getRequest()->getParam('method');
+        if (empty($method) || !preg_match('#svea_(invoice|paymentplan)#', $method)) {
+            $method = 'svea_invoice';
+        }
+
         // Credentials
-        $conf = Mage::getStoreConfig('payment/svea_invoice');
+        $conf = Mage::getStoreConfig('payment/' . $method);
         $conf['company'] = $this->getRequest()->getParam('type') == 1;
 
         try {
