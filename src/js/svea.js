@@ -400,18 +400,24 @@ function _sveaOnPaymentMethodChange()
 function _sveaSetupObservers()
 {
     // Address selector
-    $$('.svea_address_selectbox').invoke('observe', 'change', sveaAddressSelectChanged);
+    //$$('.svea_address_selectbox').invoke('observe', 'change', sveaAddressSelectChanged);
+    jQuery('.svea_address_selectbox').live('change', sveaAddressSelectChanged);
 
     // Selector for customer type 0 (person)
-    $$('.payment_form_customerType_0').invoke('observe', 'change', setCustomerTypeRadioThing);
+    //$$('.payment_form_customerType_0').invoke('observe', 'change', setCustomerTypeRadioThing);
+    jQuery('.payment_form_customerType_0').live('change', setCustomerTypeRadioThing);
     // Selector for customer type 1 (company)
-    $$('.payment_form_customerType_1').invoke('observe', 'change', setCustomerTypeRadioThing);
+    //$$('.payment_form_customerType_1').invoke('observe', 'change', setCustomerTypeRadioThing);
+    jQuery('.payment_form_customerType_1').live('change', setCustomerTypeRadioThing);
+    
 
     // On payment method change
-    $$('input[name="payment[method]"]').invoke('observe', 'change', _sveaOnPaymentMethodChange);
+    //$$('input[name="payment[method]"]').invoke('observe', 'change', _sveaOnPaymentMethodChange);
+    jQuery('input[name="payment[method]"]').live('change', _sveaOnPaymentMethodChange);
 }
 
-$(document).observe('dom:loaded', function () {
+jQuery(document).ready(function () {
     _sveaSetupObservers();
     _sveaOnPaymentMethodChange();
 });
+
