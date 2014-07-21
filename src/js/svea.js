@@ -416,8 +416,9 @@ function _sveaSetupObservers()
     jQuery('input[name="payment[method]"]').live('change', _sveaOnPaymentMethodChange);
 }
 
-jQuery(document).ready(function () {
+/* temporarily disable - paavo */
+/*jQuery(document).ready(function () {
     _sveaSetupObservers();
     _sveaOnPaymentMethodChange();
-});
+});*/
 
