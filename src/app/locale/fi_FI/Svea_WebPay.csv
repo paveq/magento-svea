@@ -20,7 +20,8 @@
 "delivered","Tilaus toimitettu"
 "month","kuukausi"
 "initial_fee","Lisätään perustamiskulu"
-
+"Din månadskostnad","Kuukausierä"
+"mån","kk"
 "no_orderid","Svealta ei löydy tilausta. Svean tilaustunniste vaaditaan"
 
 "Error_20000","Svea error %s : Tilaus suljettu"

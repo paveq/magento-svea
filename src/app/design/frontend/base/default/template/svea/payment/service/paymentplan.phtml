@@ -30,7 +30,7 @@ $_ssnHtml = $this->getSsnHtml();
                     <?php else: ?>
                         <option <?php echo $_selected ?>
                             value="<?php echo $_campaign->campaincode; ?>"> <?php echo $_campaign->contractlength; ?>
-                            mån
+                            <?php echo Mage::helper('svea_webpay')->__('mån') ?>
                         </option>
                     <?php endif; ?>
                     <?php
@@ -45,7 +45,7 @@ $_ssnHtml = $this->getSsnHtml();
             <br>
 
             <p id="paymentplan_cost_text" style="display:none">
-                Din månadskostnad: <span class="cost"><span id="paymentplan_cost"></span> <?php echo $_currency . "/" . Mage::helper('svea_webpay')->__('month') ?></span>
+                <?php echo Mage::helper('svea_webpay')->__('Din månadskostnad') ?>: <span class="cost"><span id="paymentplan_cost"></span> <?php echo $_currency . "/" . Mage::helper('svea_webpay')->__('month') ?></span>
             </p>
         </div>
     </li>
